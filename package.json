@@ -1,0 +1,44 @@
+{
+  "name": "lendsqr-be-test",
+  "version": "1.0.0",
+  "description": "This is an assessment application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --build --clean && tsc",
+    "start": "npm run build && node dist/index.js",
+    "dev": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/philtechphilips/lendsqr-be-test.git"
+  },
+  "author": "Pelumi Isola",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/philtechphilips/lendsqr-be-test/issues"
+  },
+  "homepage": "https://github.com/philtechphilips/lendsqr-be-test#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "knex": "^3.1.0",
+    "morgan": "^1.10.1",
+    "mysql2": "^3.14.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.3.2",
+    "jest": "^30.1.3",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}
