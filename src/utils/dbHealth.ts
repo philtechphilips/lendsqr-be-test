@@ -1,4 +1,4 @@
-import db from "../config/db";
+import db from "../database/connection";
 import { getErrorMessage } from "./getErrorMessage";
 
 export const checkDbConnection = async (): Promise<boolean | never> => {

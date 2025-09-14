@@ -8,8 +8,8 @@
     "build": "tsc --build --clean && tsc",
     "start": "npm run build && node dist/index.js",
     "dev": "nodemon",
-    "migration:make": "knex migrate:make $npm_config_name --knexfile ./src/config/db.ts",
-    "migration:latest": "knex migrate:latest --knexfile ./src/config/db.ts",
+    "migration:make": "knex migrate:make --knexfile ./src/config/db.ts",
+    "migration:latest": "ts-node -r dotenv/config ./node_modules/knex/bin/cli.js migrate:latest --knexfile ./src/config/db.ts",
     "migration:rollback": "knex migrate:rollback --knexfile ./src/config/db.ts",
     "migration:up": "knex migrate:up --knexfile ./src/config/db.ts",
     "migration:down": "knex migrate:down --knexfile ./src/config/db.ts"
@@ -26,6 +26,7 @@
   "homepage": "https://github.com/philtechphilips/lendsqr-be-test#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
     "helmet": "^8.1.0",
