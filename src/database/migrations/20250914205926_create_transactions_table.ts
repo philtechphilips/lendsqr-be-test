@@ -4,13 +4,13 @@ export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("transactions", (table) => {
     table.uuid("id").primary().defaultTo(knex.raw("(UUID())"));
     table
-      .uuid("wallet_id")
+      .uuid("walletId")
       .notNullable()
       .references("id")
       .inTable("wallets")
       .onDelete("CASCADE");
     table
-      .uuid("user_id")
+      .uuid("userId")
       .notNullable()
       .references("id")
       .inTable("users")

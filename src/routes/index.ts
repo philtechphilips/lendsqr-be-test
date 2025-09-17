@@ -1,5 +1,6 @@
 import express from "express";
 import db from "../database/connection";
+import userRouter from "./user";
 
 const Router = express.Router();
 
@@ -18,6 +19,8 @@ Router.get("/health", async (req, res) => {
     res.status(500).json({ status: "error", message: err });
   }
 });
+
+Router.use("/users", userRouter);
 
 Router.use(function (req, res, next) {
   res

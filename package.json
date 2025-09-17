@@ -25,6 +25,8 @@
   },
   "homepage": "https://github.com/philtechphilips/lendsqr-be-test#readme",
   "dependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
