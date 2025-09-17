@@ -202,7 +202,7 @@ export class UserService {
 
       // Prepare update payload (only include fields that are provided)
       const updatePayload: Partial<UserRow> = Object.fromEntries(
-        Object.entries(payload).filter(([_, value]) => value !== undefined)
+        Object.entries(payload).filter(([_, value]) => value !== undefined),
       );
 
       // Update user
