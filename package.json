@@ -4,7 +4,9 @@
   "description": "This is an assessment application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "build": "tsc --build --clean && tsc",
     "start": "npm run build && node dist/index.js",
     "dev": "nodemon",
