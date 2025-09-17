@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 // JWT Configuration
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "24h";
+const JWT_SECRET = process.env.JWT_SECRET || "Secret$123";
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "2h";
 
 // Password Configuration
 const SALT_ROUNDS = 12;

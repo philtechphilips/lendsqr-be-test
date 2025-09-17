@@ -131,8 +131,9 @@ export const update = async (
 
   await query.where(updateFilter).update(data);
 
-  // Fetch the updated record
-  const updatedData = await query.where(updateFilter).first();
+  // Fetch the updated record using a new query
+  const selectQuery = trx ? trx(tableName) : db(tableName);
+  const updatedData = await selectQuery.where(updateFilter).first();
   return updatedData;
 };
 

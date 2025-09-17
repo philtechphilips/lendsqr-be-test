@@ -1,7 +1,7 @@
 import db from "../../database/connection";
-import { CreateUserDTO, LoginDTO } from "./dto/user.dto";
+import { CreateUserDTO, LoginDTO, UpdateUserDTO } from "./dto/user.dto";
 import { getErrorMessage } from "../../utils/getErrorMessage";
-import { create, fetchOne, isUnique } from "../../utils/schema";
+import { create, fetchOne, isUnique, update } from "../../utils/schema";
 import {
   ConflictError,
   AppError,
@@ -172,6 +172,56 @@ export class UserService {
       }
       throw new AppError(
         `UserService.loginUser error: ${getErrorMessage(err)}`,
+      );
+    }
+  }
+
+  async updateUserProfile(
+    userId: string,
+    payload: UpdateUserDTO,
+  ): Promise<Omit<UserRow, "password">> {
+    try {
+      // Check if user exists and is not deleted
+      const existingUser = await fetchOne(USERS_TABLE, {
+        id: userId,
+      });
+
+      if (!existingUser) {
+        throw new NotFoundError("User not found");
+      }
+
+      // Check if phone number is being updated and if it's unique
+      if (payload.phone && payload.phone !== existingUser.phone) {
+        const phoneExists = await isUnique(USERS_TABLE, {
+          phone: payload.phone,
+        });
+        if (!phoneExists) {
+          throw new ConflictError("Phone number already exists");
+        }
+      }
+
+      // Prepare update payload (only include fields that are provided)
+      const updatePayload: Partial<UserRow> = Object.fromEntries(
+        Object.entries(payload).filter(([_, value]) => value !== undefined)
+      );
+
+      // Update user
+      const updatedUser = await update(
+        USERS_TABLE,
+        { id: userId },
+        updatePayload,
+      );
+
+      // Remove password from response
+      const { password, ...userWithoutPassword } = updatedUser;
+
+      return userWithoutPassword;
+    } catch (err: unknown) {
+      if (err instanceof AppError) {
+        throw err;
+      }
+      throw new AppError(
+        `UserService.updateUserProfile error: ${getErrorMessage(err)}`,
       );
     }
   }

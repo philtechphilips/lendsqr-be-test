@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import {
   createUserSchema,
   loginSchema,
+  updateUserSchema,
 } from "../validation-schema/user-schema";
 import { errorResponse } from "../utils/response";
 
@@ -33,6 +34,28 @@ export const validateLogin = (
   next: NextFunction,
 ) => {
   const { error } = loginSchema.validate(req.body);
+
+  if (error) {
+    const errorMessage = error.details
+      .map((detail) => detail.message)
+      .join(", ");
+    return errorResponse(res, {
+      statusCode: 400,
+      status: "failure",
+      message: errorMessage,
+      payload: null,
+    });
+  }
+
+  next();
+};
+
+export const validateUpdateUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { error } = updateUserSchema.validate(req.body);
 
   if (error) {
     const errorMessage = error.details
