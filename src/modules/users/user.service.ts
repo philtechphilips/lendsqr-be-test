@@ -1,9 +1,14 @@
 import db from "../../database/connection";
-import { CreateUserDTO } from "./dto/user.dto";
+import { CreateUserDTO, LoginDTO } from "./dto/user.dto";
 import { getErrorMessage } from "../../utils/getErrorMessage";
 import { create, fetchOne, isUnique } from "../../utils/schema";
-import { ConflictError, AppError } from "../../utils/errors";
-import { hashPassword, verifyPassword } from "../../utils/password";
+import {
+  ConflictError,
+  AppError,
+  UnauthorizedError,
+  NotFoundError,
+} from "../../utils/errors";
+import { hashPassword, verifyPassword, generateToken } from "../../utils/app";
 
 // Define table names as constants
 const USERS_TABLE = "users";
@@ -126,5 +131,48 @@ export class UserService {
         );
       }
     });
+  }
+
+  async loginUser(
+    payload: LoginDTO,
+  ): Promise<{ user: Omit<UserRow, "password">; token: string }> {
+    try {
+      // Find user by email
+      const user = await fetchOne(USERS_TABLE, {
+        email: payload.email.toLowerCase(),
+      });
+
+      if (!user) {
+        throw new NotFoundError("User not found");
+      }
+
+      // Verify password
+      const isPasswordValid = await verifyPassword(
+        payload.password,
+        user.password,
+      );
+      if (!isPasswordValid) {
+        throw new UnauthorizedError("Invalid email or password");
+      }
+
+      // Remove password from user object
+      const { password, ...userWithoutPassword } = user;
+
+      // Generate JWT token
+      const token = generateToken({
+        userId: user.id,
+        email: user.email,
+      });
+
+      return { user: userWithoutPassword, token };
+    } catch (err: unknown) {
+      // Re-throw AppError instances as-is, wrap others
+      if (err instanceof AppError) {
+        throw err;
+      }
+      throw new AppError(
+        `UserService.loginUser error: ${getErrorMessage(err)}`,
+      );
+    }
   }
 }

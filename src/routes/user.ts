@@ -1,6 +1,9 @@
 import { Router, Request, Response } from "express";
 import { UserController } from "../modules/users/user.controller";
-import { validateCreateUser } from "../validators/user-validator";
+import {
+  validateCreateUser,
+  validateLogin,
+} from "../validators/user-validator";
 
 const router = Router();
 const userController = new UserController();
@@ -10,7 +13,9 @@ router.post("/register", validateCreateUser, (req: Request, res: Response) =>
   userController.register(req, res),
 );
 
-// router.post("/login", (req: Request, res: Response) => userController.login(req, res));
+router.post("/login", validateLogin, (req: Request, res: Response) =>
+  userController.login(req, res),
+);
 
 // User profile routes (for future implementation)
 // router.get("/profile", (req: Request, res: Response) => userController.getProfile(req, res));

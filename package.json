@@ -26,6 +26,7 @@
   "homepage": "https://github.com/philtechphilips/lendsqr-be-test#readme",
   "dependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
@@ -33,6 +34,7 @@
     "express-rate-limit": "^8.1.0",
     "helmet": "^8.1.0",
     "joi": "^18.0.1",
+    "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
     "morgan": "^1.10.1",
     "mysql2": "^3.14.5"

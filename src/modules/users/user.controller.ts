@@ -31,4 +31,31 @@ export class UserController {
       });
     }
   }
+
+  async login(req: Request, res: Response) {
+    try {
+      const payload = req.body;
+
+      const result = await userService.loginUser(payload);
+
+      return await successResponse(res, {
+        statusCode: 200,
+        message: "Login successful",
+        payload: result.user,
+        token: result.token,
+      });
+    } catch (err: unknown) {
+      if (err instanceof AppError) {
+        return await errorResponse(res, {
+          statusCode: err.statusCode,
+          message: err.message,
+        });
+      }
+
+      return await errorResponse(res, {
+        statusCode: 500,
+        message: "Internal server error",
+      });
+    }
+  }
 }

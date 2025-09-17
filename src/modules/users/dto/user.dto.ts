@@ -17,3 +17,8 @@ export interface CreateUserDTO {
   nokEmail?: string;
   nokRelationship?: string;
 }
+
+export interface LoginDTO {
+  email: string;
+  password: string;
+}

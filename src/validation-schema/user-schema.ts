@@ -87,3 +87,15 @@ export const createUserSchema = Joi.object({
     "string.max": "Next of kin relationship cannot exceed 50 characters.",
   }),
 });
+
+export const loginSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    "any.required": "Email is required.",
+    "string.email": "Please provide a valid email address.",
+    "string.empty": "Email cannot be empty.",
+  }),
+  password: Joi.string().required().messages({
+    "any.required": "Password is required.",
+    "string.empty": "Password cannot be empty.",
+  }),
+});
