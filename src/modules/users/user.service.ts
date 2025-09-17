@@ -7,8 +7,10 @@ import {
   AppError,
   UnauthorizedError,
   NotFoundError,
+  KarmaVerificationError,
 } from "../../utils/errors";
 import { hashPassword, verifyPassword, generateToken } from "../../utils/app";
+import axios from "axios";
 
 // Define table names as constants
 const USERS_TABLE = "users";
@@ -41,6 +43,27 @@ interface UserRow {
 export class UserService {
   async registerUser(payload: CreateUserDTO, initialBalance = 0) {
     try {
+      // Verify user eligibility with Karma API
+      const karmaDetails = await this.getKarmaDetails(payload.email);
+      if (!karmaDetails) {
+        // If Karma API fails, we'll allow registration to proceed
+        console.warn(
+          `Karma verification failed for email: ${payload.email}, allowing registration to proceed`,
+        );
+      } else {
+        const isEligible =
+          karmaDetails.data.reason === null &&
+          karmaDetails.data.amount_in_contention === "0.00";
+        if (!isEligible) {
+          const reason =
+            karmaDetails.data.reason || "Financial issues detected";
+          const amount = karmaDetails.data.amount_in_contention;
+          throw new KarmaVerificationError(
+            `User is not eligible for registration. Reason: ${reason}, Amount in contention: ${amount}`,
+          );
+        }
+      }
+
       // Check if email already exists
       const emailExists = await isUnique(USERS_TABLE, {
         email: payload.email.toLowerCase(),
@@ -223,6 +246,26 @@ export class UserService {
       throw new AppError(
         `UserService.updateUserProfile error: ${getErrorMessage(err)}`,
       );
+    }
+  }
+
+  private async getKarmaDetails(email: string): Promise<any> {
+    try {
+      const response = await axios.get(
+        `https://adjutor.lendsqr.com/v2/verification/karma/${encodeURIComponent(email)}`,
+        {
+          timeout: 10000,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.KARMA_TOKEN}`,
+          },
+        },
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get Karma details:", error);
+      return null;
     }
   }
 }

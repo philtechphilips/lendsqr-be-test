@@ -44,3 +44,9 @@ export class ForbiddenError extends AppError {
     super(message, 403);
   }
 }
+
+export class KarmaVerificationError extends AppError {
+  constructor(message: string) {
+    super(message, 403);
+  }
+}
