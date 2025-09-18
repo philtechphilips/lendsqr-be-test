@@ -10,7 +10,7 @@ A robust, scalable Node.js backend API built with TypeScript, Express.js, and My
 - **Security**: JWT authentication, rate limiting, input validation
 - **Testing**: Comprehensive test suite with Jest
 - **Database**: MySQL with Knex.js migrations
-- **API Documentation**: Postman
+- **API Documentation**: [Postman Collection](https://documenter.getpostman.com/view/23305592/2sB3HrmcuK)
 
 ## 🛠️ Technology Stack
 
@@ -220,6 +220,17 @@ http://localhost:8008/v1
 | ------ | --------- | ------------------- | ------------- |
 | GET    | `/`       | API welcome message | No            |
 | GET    | `/health` | Health check        | No            |
+
+## 📖 API Documentation
+
+**Complete API Documentation**: [Postman Collection](https://documenter.getpostman.com/view/23305592/2sB3HrmcuK)
+
+The Postman collection includes:
+- All available endpoints with detailed descriptions
+- Request/response examples
+- Authentication setup instructions
+- Environment variables configuration
+- Sample requests for testing
 
 ## 🔧 Development Commands
 
