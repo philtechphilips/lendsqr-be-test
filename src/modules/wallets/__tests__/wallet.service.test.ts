@@ -135,6 +135,10 @@ describe("WalletService", () => {
       type: "FUND" as const,
       amount: 1000,
       reference: testReference,
+      status: "PENDING" as const,
+      description: "Wallet funding of ₦1000",
+      balanceBefore: 5000,
+      balanceAfter: 6000,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -149,10 +153,20 @@ describe("WalletService", () => {
         mockTransactionService.createTransaction.mockResolvedValue(
           mockTransaction,
         );
+        mockTransactionService.markTransactionSuccess.mockResolvedValue({
+          ...mockTransaction,
+          status: "SUCCESS" as const,
+        });
+        mockTransactionService.markTransactionSuccess.mockResolvedValue({
+          ...mockTransaction,
+          status: "SUCCESS" as const,
+        });
 
         const result = await walletService.fundWallet(
           testUserId,
           validFundWalletDTO,
+          "192.168.1.1",
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
         );
 
         expect(result).toEqual({
@@ -178,6 +192,15 @@ describe("WalletService", () => {
             type: "FUND",
             amount: 1000,
             reference: testReference,
+            status: "PENDING",
+            description: "Wallet funding of ₦1000",
+            balanceBefore: 5000,
+            balanceAfter: 6000,
+            fee: 0,
+            channel: "API",
+            ipAddress: "192.168.1.1",
+            userAgent:
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
           },
           expect.any(Function),
         );
@@ -196,10 +219,16 @@ describe("WalletService", () => {
         mockTransactionService.createTransaction.mockResolvedValue(
           mockTransaction,
         );
+        mockTransactionService.markTransactionSuccess.mockResolvedValue({
+          ...mockTransaction,
+          status: "SUCCESS" as const,
+        });
 
         const result = await walletService.fundWallet(
           testUserId,
           fundDTOWithoutReference,
+          undefined,
+          undefined,
         );
 
         expect(result).toEqual({
@@ -216,6 +245,14 @@ describe("WalletService", () => {
             type: "FUND",
             amount: 1000,
             reference: testReference,
+            status: "PENDING",
+            description: "Wallet funding of ₦1000",
+            balanceBefore: 5000,
+            balanceAfter: 6000,
+            fee: 0,
+            channel: "API",
+            ipAddress: undefined,
+            userAgent: undefined,
           },
           expect.any(Function),
         );
@@ -309,6 +346,10 @@ describe("WalletService", () => {
       amount: 500,
       reference: testReference,
       receiverId: testRecipientId,
+      status: "PENDING" as const,
+      description: "Transfer of ₦500 to recipient@example.com",
+      balanceBefore: 5000,
+      balanceAfter: 4500,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -330,6 +371,10 @@ describe("WalletService", () => {
         mockTransactionService.createTransaction.mockResolvedValue(
           mockTransaction,
         );
+        mockTransactionService.markTransactionSuccess.mockResolvedValue({
+          ...mockTransaction,
+          status: "SUCCESS" as const,
+        });
 
         const result = await walletService.transferFunds(
           testUserId,
@@ -386,6 +431,14 @@ describe("WalletService", () => {
             reference: testReference,
             senderId: testUserId,
             receiverId: testRecipientId,
+            status: "PENDING",
+            description: "Transfer of ₦500 to recipient@example.com",
+            balanceBefore: 5000,
+            balanceAfter: 4500,
+            fee: 0.0,
+            channel: "API",
+            ipAddress: undefined,
+            userAgent: undefined,
           },
           expect.any(Function),
         );
@@ -403,6 +456,15 @@ describe("WalletService", () => {
             reference: testReference,
             senderId: testUserId,
             receiverId: testRecipientId,
+            status: "PENDING",
+            description:
+              "Transfer of ₦500 from 550e8400-e29b-41d4-a716-446655440000",
+            balanceBefore: 2000,
+            balanceAfter: 2500,
+            fee: 0.0,
+            channel: "API",
+            ipAddress: undefined,
+            userAgent: undefined,
           },
           expect.any(Function),
         );
@@ -429,6 +491,10 @@ describe("WalletService", () => {
         mockTransactionService.createTransaction.mockResolvedValue(
           mockTransaction,
         );
+        mockTransactionService.markTransactionSuccess.mockResolvedValue({
+          ...mockTransaction,
+          status: "SUCCESS" as const,
+        });
 
         const result = await walletService.transferFunds(
           testUserId,
@@ -552,6 +618,10 @@ describe("WalletService", () => {
       type: "WITHDRAW" as const,
       amount: 500,
       reference: testReference,
+      status: "PENDING" as const,
+      description: "Wallet withdrawal of ₦500",
+      balanceBefore: 5000,
+      balanceAfter: 4500,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -566,6 +636,10 @@ describe("WalletService", () => {
         mockTransactionService.createTransaction.mockResolvedValue(
           mockTransaction,
         );
+        mockTransactionService.markTransactionSuccess.mockResolvedValue({
+          ...mockTransaction,
+          status: "SUCCESS" as const,
+        });
 
         const result = await walletService.withdrawFunds(
           testUserId,
@@ -595,6 +669,14 @@ describe("WalletService", () => {
             type: "WITHDRAW",
             amount: 500,
             reference: testReference,
+            status: "PENDING",
+            description: "Wallet withdrawal of ₦500",
+            balanceBefore: 5000,
+            balanceAfter: 4500,
+            fee: 0.0,
+            channel: "API",
+            ipAddress: undefined,
+            userAgent: undefined,
           },
           expect.any(Function),
         );
@@ -613,6 +695,10 @@ describe("WalletService", () => {
         mockTransactionService.createTransaction.mockResolvedValue(
           mockTransaction,
         );
+        mockTransactionService.markTransactionSuccess.mockResolvedValue({
+          ...mockTransaction,
+          status: "SUCCESS" as const,
+        });
 
         const result = await walletService.withdrawFunds(
           testUserId,

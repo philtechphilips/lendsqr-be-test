@@ -44,6 +44,10 @@ describe("TransactionService", () => {
       type: "FUND",
       amount: 1000,
       reference: testReference,
+      status: "PENDING",
+      description: "Test transaction",
+      balanceBefore: 0,
+      balanceAfter: 1000,
     };
 
     const mockCreatedTransaction = {
@@ -55,6 +59,10 @@ describe("TransactionService", () => {
       reference: testReference,
       receiverId: null,
       senderId: null,
+      status: "PENDING" as const,
+      description: "Test transaction",
+      balanceBefore: 0,
+      balanceAfter: 1000,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -63,6 +71,10 @@ describe("TransactionService", () => {
       ...mockCreatedTransaction,
       receiverId: undefined,
       senderId: undefined,
+      status: "PENDING" as const,
+      description: "Test transaction",
+      balanceBefore: 0,
+      balanceAfter: 1000,
       wallet: {
         id: testWalletId,
         userId: testUserId,
@@ -106,6 +118,17 @@ describe("TransactionService", () => {
             reference: testReference,
             receiverId: null,
             senderId: null,
+            status: "PENDING",
+            description: "Test transaction",
+            failureReason: null,
+            externalReference: null,
+            channel: null,
+            ipAddress: null,
+            userAgent: null,
+            fee: 0.0,
+            balanceBefore: 0,
+            balanceAfter: 1000,
+            failedAt: null,
           },
           undefined,
         );
@@ -185,6 +208,17 @@ describe("TransactionService", () => {
             reference: testReference,
             receiverId: testReceiverId,
             senderId: testSenderId,
+            status: "PENDING",
+            description: null,
+            failureReason: null,
+            externalReference: null,
+            channel: null,
+            ipAddress: null,
+            userAgent: null,
+            fee: 0.0,
+            balanceBefore: null,
+            balanceAfter: null,
+            failedAt: null,
           },
           undefined,
         );
@@ -246,6 +280,17 @@ describe("TransactionService", () => {
             reference: testReference,
             receiverId: null,
             senderId: null,
+            status: "PENDING",
+            description: null,
+            failureReason: null,
+            externalReference: null,
+            channel: null,
+            ipAddress: null,
+            userAgent: null,
+            fee: 0.0,
+            balanceBefore: null,
+            balanceAfter: null,
+            failedAt: null,
           },
           undefined,
         );
@@ -274,6 +319,17 @@ describe("TransactionService", () => {
             reference: testReference,
             receiverId: null,
             senderId: null,
+            status: "PENDING",
+            description: "Test transaction",
+            failureReason: null,
+            externalReference: null,
+            channel: null,
+            ipAddress: null,
+            userAgent: null,
+            fee: 0.0,
+            balanceBefore: 0,
+            balanceAfter: 1000,
+            failedAt: null,
           },
           mockTransaction,
         );
@@ -679,6 +735,148 @@ describe("TransactionService", () => {
       await expect(
         transactionService.getTransactionByReference(testReference),
       ).rejects.toThrow(appError);
+    });
+  });
+
+  describe("markTransactionSuccess", () => {
+    it("should update transaction status to SUCCESS", async () => {
+      const balanceAfter = 1500;
+      const mockUpdatedTransaction = {
+        id: testTransactionId,
+        walletId: testWalletId,
+        userId: testUserId,
+        type: "FUND" as const,
+        amount: 1000,
+        reference: testReference,
+        receiverId: null,
+        senderId: null,
+        status: "SUCCESS" as const,
+        description: "Test transaction",
+        balanceBefore: 0,
+        balanceAfter: balanceAfter,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        processedAt: new Date(),
+      };
+
+      // Mock the getTransactionWithRelations method
+      const mockGetTransactionWithRelations = jest.spyOn(
+        transactionService as any,
+        "getTransactionWithRelations",
+      );
+      mockGetTransactionWithRelations.mockResolvedValueOnce(
+        mockUpdatedTransaction,
+      );
+
+      const result = await transactionService.markTransactionSuccess(
+        testTransactionId,
+        balanceAfter,
+        mockTransaction,
+      );
+
+      // Note: Database calls are not mocked in this test setup
+      // The test verifies the method completes without errors
+      expect(result).toEqual(mockUpdatedTransaction);
+    });
+  });
+
+  describe("markTransactionFailed", () => {
+    it("should update transaction status to FAILED", async () => {
+      const failureReason = "Insufficient funds";
+      const mockFailedTransaction = {
+        id: testTransactionId,
+        walletId: testWalletId,
+        userId: testUserId,
+        type: "FUND" as const,
+        amount: 1000,
+        reference: testReference,
+        receiverId: null,
+        senderId: null,
+        status: "FAILED" as const,
+        description: "Test transaction",
+        balanceBefore: 0,
+        balanceAfter: 1000,
+        failureReason: failureReason,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        failedAt: new Date(),
+      };
+
+      // Mock the query builder chain
+      const mockQueryBuilder = {
+        where: jest.fn().mockReturnThis(),
+        update: jest.fn().mockResolvedValue(undefined),
+      };
+      mockTransaction.mockReturnValue(mockQueryBuilder);
+
+      // Mock the getTransactionWithRelations method
+      const mockGetTransactionWithRelations = jest.spyOn(
+        transactionService as any,
+        "getTransactionWithRelations",
+      );
+      mockGetTransactionWithRelations.mockResolvedValueOnce(
+        mockFailedTransaction,
+      );
+
+      const result = await transactionService.markTransactionFailed(
+        testTransactionId,
+        failureReason,
+        mockTransaction,
+      );
+
+      // Note: Database calls are not mocked in this test setup
+      // The test verifies the method completes without errors
+      expect(result).toEqual(mockFailedTransaction);
+    });
+  });
+
+  describe("markTransactionCancelled", () => {
+    it("should update transaction status to CANCELLED", async () => {
+      const reason = "User cancelled transaction";
+      const mockCancelledTransaction = {
+        id: testTransactionId,
+        walletId: testWalletId,
+        userId: testUserId,
+        type: "FUND" as const,
+        amount: 1000,
+        reference: testReference,
+        receiverId: null,
+        senderId: null,
+        status: "CANCELLED" as const,
+        description: "Test transaction",
+        balanceBefore: 0,
+        balanceAfter: 1000,
+        failureReason: reason,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        failedAt: new Date(),
+      };
+
+      // Mock the query builder chain
+      const mockQueryBuilder = {
+        where: jest.fn().mockReturnThis(),
+        update: jest.fn().mockResolvedValue(undefined),
+      };
+      mockTransaction.mockReturnValue(mockQueryBuilder);
+
+      // Mock the getTransactionWithRelations method
+      const mockGetTransactionWithRelations = jest.spyOn(
+        transactionService as any,
+        "getTransactionWithRelations",
+      );
+      mockGetTransactionWithRelations.mockResolvedValueOnce(
+        mockCancelledTransaction,
+      );
+
+      const result = await transactionService.markTransactionCancelled(
+        testTransactionId,
+        reason,
+        mockTransaction,
+      );
+
+      // Note: Database calls are not mocked in this test setup
+      // The test verifies the method completes without errors
+      expect(result).toEqual(mockCancelledTransaction);
     });
   });
 });

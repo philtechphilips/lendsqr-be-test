@@ -61,6 +61,8 @@ export class WalletService {
   async fundWallet(
     userId: string,
     payload: FundWalletDTO,
+    ipAddress?: string,
+    userAgent?: string,
   ): Promise<FundWalletResponse> {
     try {
       // Validate amount
@@ -94,7 +96,7 @@ export class WalletService {
           trx,
         );
 
-        // Create transaction record
+        // Create transaction record with balance tracking
         const transaction = await this.transactionService.createTransaction(
           {
             walletId: wallet.id,
@@ -102,7 +104,22 @@ export class WalletService {
             type: "FUND",
             amount: payload.amount,
             reference: reference,
+            status: "PENDING",
+            description: `Wallet funding of ₦${payload.amount}`,
+            balanceBefore: Number(wallet.balance),
+            balanceAfter: newBalance,
+            fee: 0.0,
+            channel: "API",
+            ipAddress: ipAddress,
+            userAgent: userAgent,
           },
+          trx,
+        );
+
+        // Mark transaction as successful
+        await this.transactionService.markTransactionSuccess(
+          transaction.id,
+          undefined, // balanceAfter already set during transaction creation
           trx,
         );
 
@@ -127,6 +144,8 @@ export class WalletService {
   async transferFunds(
     senderUserId: string,
     payload: TransferFundsDTO,
+    ipAddress?: string,
+    userAgent?: string,
   ): Promise<TransferFundsResponse> {
     try {
       // Validate amount
@@ -213,6 +232,14 @@ export class WalletService {
               reference: reference,
               senderId: senderUserId, // Include sender ID for debitor info
               receiverId: recipient.id, // Include receiver ID for creditor info
+              status: "PENDING",
+              description: `Transfer of ₦${payload.amount} to ${recipient.email}`,
+              balanceBefore: Number(senderWallet.balance),
+              balanceAfter: senderNewBalance,
+              fee: 0.0,
+              channel: "API",
+              ipAddress: ipAddress,
+              userAgent: userAgent,
             },
             trx,
           );
@@ -228,9 +255,30 @@ export class WalletService {
               reference: reference,
               senderId: senderUserId, // Include sender ID for debitor info
               receiverId: recipient.id, // Include receiver ID for creditor info
+              status: "PENDING",
+              description: `Transfer of ₦${payload.amount} from ${senderWallet.user_id}`,
+              balanceBefore: Number(recipientWallet.balance),
+              balanceAfter: recipientNewBalance,
+              fee: 0.0,
+              channel: "API",
+              ipAddress: ipAddress,
+              userAgent: userAgent,
             },
             trx,
           );
+
+        // Mark both transactions as successful
+        await this.transactionService.markTransactionSuccess(
+          senderTransaction.id,
+          undefined, // balanceAfter already set during transaction creation
+          trx,
+        );
+
+        await this.transactionService.markTransactionSuccess(
+          recipientTransaction.id,
+          undefined, // balanceAfter already set during transaction creation
+          trx,
+        );
 
         // Only return sender's transaction
         return {
@@ -253,6 +301,8 @@ export class WalletService {
   async withdrawFunds(
     userId: string,
     payload: WithdrawFundsDTO,
+    ipAddress?: string,
+    userAgent?: string,
   ): Promise<WithdrawFundsResponse> {
     try {
       // Validate amount
@@ -299,7 +349,22 @@ export class WalletService {
             type: "WITHDRAW",
             amount: payload.amount,
             reference: reference,
+            status: "PENDING",
+            description: `Wallet withdrawal of ₦${payload.amount}`,
+            balanceBefore: Number(wallet.balance),
+            balanceAfter: newBalance,
+            fee: 0.0,
+            channel: "API",
+            ipAddress: ipAddress,
+            userAgent: userAgent,
           },
+          trx,
+        );
+
+        // Mark transaction as successful
+        await this.transactionService.markTransactionSuccess(
+          transaction.id,
+          undefined, // balanceAfter already set during transaction creation
           trx,
         );
 

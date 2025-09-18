@@ -1,5 +1,5 @@
 import db from "../../database/connection";
-import { create, fetchOne } from "../../utils/schema";
+import { create, fetchOne, update } from "../../utils/schema";
 import { getErrorMessage } from "../../utils/getErrorMessage";
 import { AppError } from "../../utils/errors";
 
@@ -13,6 +13,17 @@ export interface CreateTransactionDTO {
   reference: string;
   receiverId?: string; // For transfer transactions (creditor)
   senderId?: string; // For transfer transactions (debitor)
+  status?: "PENDING" | "SUCCESS" | "FAILED" | "CANCELLED";
+  description?: string;
+  failureReason?: string;
+  externalReference?: string;
+  channel?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  fee?: number;
+  balanceBefore?: number;
+  balanceAfter?: number;
+  failedAt?: Date;
 }
 
 export interface TransactionRow {
@@ -22,13 +33,25 @@ export interface TransactionRow {
   type: "FUND" | "TRANSFER" | "WITHDRAW";
   amount: number;
   reference: string;
-  receiverId?: string; 
-  senderId?: string; 
+  receiverId?: string;
+  senderId?: string;
+  status: "PENDING" | "SUCCESS" | "FAILED" | "CANCELLED";
+  description?: string;
+  failureReason?: string;
+  externalReference?: string;
+  channel?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  fee?: number;
+  balanceBefore?: number;
+  balanceAfter?: number;
   createdAt: Date;
   updatedAt: Date;
-  wallet?: any; 
-  user?: any; 
-  receiver?: any; 
+  processedAt?: Date;
+  failedAt?: Date;
+  wallet?: any;
+  user?: any;
+  receiver?: any;
   sender?: any;
 }
 
@@ -49,6 +72,17 @@ export class TransactionService {
         reference: payload.reference,
         receiverId: payload.receiverId || null,
         senderId: payload.senderId || null,
+        status: payload.status || "PENDING",
+        description: payload.description || null,
+        failureReason: payload.failureReason || null,
+        externalReference: payload.externalReference || null,
+        channel: payload.channel || null,
+        ipAddress: payload.ipAddress || null,
+        userAgent: payload.userAgent || null,
+        fee: payload.fee || 0.0,
+        balanceBefore: payload.balanceBefore ?? null,
+        balanceAfter: payload.balanceAfter ?? null,
+        failedAt: payload.failedAt || null,
       };
 
       const createdTransaction = await create(
@@ -110,6 +144,100 @@ export class TransactionService {
   }
 
   /**
+   * Update transaction status to SUCCESS
+   */
+  async markTransactionSuccess(
+    transactionId: string,
+    balanceAfter?: number,
+    trx?: any,
+  ): Promise<TransactionRow> {
+    try {
+      const updateData: any = {
+        status: "SUCCESS",
+        processedAt: new Date(),
+      };
+
+      // Only update balanceAfter if it's provided and not already set
+      if (balanceAfter !== undefined) {
+        updateData.balanceAfter = balanceAfter;
+      }
+
+      await update(TRANSACTIONS_TABLE, { id: transactionId }, updateData, trx);
+
+      return await this.getTransactionWithRelations(transactionId, trx);
+    } catch (err: unknown) {
+      if (err instanceof AppError) {
+        throw err;
+      }
+      throw new AppError(
+        `TransactionService.markTransactionSuccess error: ${getErrorMessage(err)}`,
+      );
+    }
+  }
+
+  /**
+   * Update transaction status to FAILED
+   */
+  async markTransactionFailed(
+    transactionId: string,
+    failureReason: string,
+    trx?: any,
+  ): Promise<TransactionRow> {
+    try {
+      await update(
+        TRANSACTIONS_TABLE,
+        { id: transactionId },
+        {
+          status: "FAILED",
+          failureReason: failureReason,
+          failedAt: new Date(),
+        },
+        trx,
+      );
+
+      return await this.getTransactionWithRelations(transactionId, trx);
+    } catch (err: unknown) {
+      if (err instanceof AppError) {
+        throw err;
+      }
+      throw new AppError(
+        `TransactionService.markTransactionFailed error: ${getErrorMessage(err)}`,
+      );
+    }
+  }
+
+  /**
+   * Update transaction status to CANCELLED
+   */
+  async markTransactionCancelled(
+    transactionId: string,
+    reason: string,
+    trx?: any,
+  ): Promise<TransactionRow> {
+    try {
+      await update(
+        TRANSACTIONS_TABLE,
+        { id: transactionId },
+        {
+          status: "CANCELLED",
+          failureReason: reason,
+          failedAt: new Date(),
+        },
+        trx,
+      );
+
+      return await this.getTransactionWithRelations(transactionId, trx);
+    } catch (err: unknown) {
+      if (err instanceof AppError) {
+        throw err;
+      }
+      throw new AppError(
+        `TransactionService.markTransactionCancelled error: ${getErrorMessage(err)}`,
+      );
+    }
+  }
+
+  /**
    * Get transaction with all related data
    */
   private async getTransactionWithRelations(
@@ -142,8 +270,8 @@ export class TransactionService {
                 'id', wallets.id,
                 'userId', wallets.user_id,
                 'balance', wallets.balance,
-                'createdAt', wallets.created_at,
-                'updatedAt', wallets.updated_at
+                'createdAt', wallets.createdAt,
+                'updatedAt', wallets.updatedAt
               )
             ELSE NULL 
           END as wallet

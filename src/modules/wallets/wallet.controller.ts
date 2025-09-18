@@ -49,7 +49,19 @@ export class WalletController {
         });
       }
 
-      const result = await walletService.fundWallet(userId, payload);
+      // Extract IP address and user agent from request headers
+      const ipAddress =
+        req.ip ||
+        req.connection.remoteAddress ||
+        (req.headers["x-forwarded-for"] as string);
+      const userAgent = req.headers["user-agent"] as string;
+
+      const result = await walletService.fundWallet(
+        userId,
+        payload,
+        ipAddress,
+        userAgent,
+      );
 
       return await successResponse(res, {
         statusCode: 200,
@@ -86,7 +98,19 @@ export class WalletController {
         });
       }
 
-      const result = await walletService.transferFunds(userId, payload);
+      // Extract IP address and user agent from request headers
+      const ipAddress =
+        req.ip ||
+        req.connection.remoteAddress ||
+        (req.headers["x-forwarded-for"] as string);
+      const userAgent = req.headers["user-agent"] as string;
+
+      const result = await walletService.transferFunds(
+        userId,
+        payload,
+        ipAddress,
+        userAgent,
+      );
 
       return await successResponse(res, {
         statusCode: 200,
@@ -123,7 +147,19 @@ export class WalletController {
         });
       }
 
-      const result = await walletService.withdrawFunds(userId, payload);
+      // Extract IP address and user agent from request headers
+      const ipAddress =
+        req.ip ||
+        req.connection.remoteAddress ||
+        (req.headers["x-forwarded-for"] as string);
+      const userAgent = req.headers["user-agent"] as string;
+
+      const result = await walletService.withdrawFunds(
+        userId,
+        payload,
+        ipAddress,
+        userAgent,
+      );
 
       return await successResponse(res, {
         statusCode: 200,
