@@ -8,7 +8,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "build": "tsc --build --clean && tsc",
-    "start": "npm run build && node dist/index.js",
+    "start": "npm run build && node -r dotenv/config dist/index.js",
     "dev": "nodemon",
     "migration:make": "knex migrate:make --knexfile ./src/config/db.ts",
     "migration:latest": "ts-node -r dotenv/config ./node_modules/knex/bin/cli.js migrate:latest --knexfile ./src/config/db.ts",

@@ -22,14 +22,14 @@ export interface TransactionRow {
   type: "FUND" | "TRANSFER" | "WITHDRAW";
   amount: number;
   reference: string;
-  receiverId?: string; // For transfer transactions (creditor)
-  senderId?: string; // For transfer transactions (debitor)
+  receiverId?: string; 
+  senderId?: string; 
   createdAt: Date;
   updatedAt: Date;
-  wallet?: any; // Populated wallet data
-  user?: any; // Populated user data
-  receiver?: any; // Populated receiver data
-  sender?: any; // Populated sender data
+  wallet?: any; 
+  user?: any; 
+  receiver?: any; 
+  sender?: any;
 }
 
 export class TransactionService {
@@ -110,7 +110,7 @@ export class TransactionService {
   }
 
   /**
-   * Get transaction with all related data - simple and working approach
+   * Get transaction with all related data
    */
   private async getTransactionWithRelations(
     transactionId: string,
