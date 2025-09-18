@@ -18,6 +18,16 @@ const config: { [key: string]: Knex.Config } = {
       extension: "ts",
     },
   },
+
+  production: {
+    client: "mysql2",
+    connection: process.env.DATABASE_URL as string, 
+    migrations: {
+      tableName: "knex_migrations",
+      directory: path.resolve(__dirname, "../database/migrations"),
+      extension: "js", 
+    },
+  },
 };
 
 export default config;
