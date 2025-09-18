@@ -21,13 +21,20 @@ const config: { [key: string]: Knex.Config } = {
 
   production: {
     client: "mysql2",
-    connection: process.env.DATABASE_URL as string, 
+    connection: {
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT) || 3306,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      ssl: { rejectUnauthorized: false }, // often required
+    },
     migrations: {
       tableName: "knex_migrations",
       directory: path.resolve(__dirname, "../database/migrations"),
-      extension: "js", 
+      extension: "js",
     },
-  },
+  },  
 };
 
 export default config;
