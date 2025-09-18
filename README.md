@@ -344,13 +344,29 @@ npm run build
 npm start
 ```
 
-### Environment Variables for Production
+### Render Deployment
 
-Ensure all environment variables are properly set in your production environment, especially:
+**Production URL:** `https://pelumi-isola-lendsqr-be-test.onrender.com`
 
-- Database credentials
-- JWT secret (use a strong, random secret)
-- Port and base URL
+#### Start Command for Render:
+```bash
+npm start
+```
+
+#### Important Notes:
+- **Server Spin-up Time**: After periods of inactivity, Render may put your server to sleep. When the first request comes in after inactivity, it can take **30 seconds to 1 minute** for the server to fully spin up and respond. This is normal behavior for Render's free tier.
+- **Cold Start Behavior**: The first request after inactivity will be slower, but subsequent requests will be fast until the next period of inactivity.
+
+#### Environment Variables for Production
+
+Ensure all environment variables are properly set in your Render dashboard:
+
+- `BASE_URL`: `https://pelumi-isola-lendsqr-be-test.onrender.com`
+- `PORT`: Render will automatically provide this
+- Database credentials (if using external database)
+- `JWT_SECRET`: Use a strong, random secret
+- `JWT_EXPIRES_IN`: Token expiration time (e.g., "24h")
+- Any other environment variables your app requires
 
 ## 👨‍💻 Author
 
