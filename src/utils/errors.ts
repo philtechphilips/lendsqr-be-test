@@ -50,3 +50,33 @@ export class KarmaVerificationError extends AppError {
     super(message, 403);
   }
 }
+
+export class InsufficientFundsError extends AppError {
+  constructor(message: string = "Insufficient funds") {
+    super(message, 400);
+  }
+}
+
+export class WalletNotFoundError extends AppError {
+  constructor(message: string = "Wallet not found") {
+    super(message, 404);
+  }
+}
+
+export class InvalidAmountError extends AppError {
+  constructor(message: string = "Invalid amount") {
+    super(message, 400);
+  }
+}
+
+export class RecipientNotFoundError extends AppError {
+  constructor(message: string = "Recipient not found") {
+    super(message, 404);
+  }
+}
+
+export class SelfTransferError extends AppError {
+  constructor(message: string = "Cannot transfer to yourself") {
+    super(message, 400);
+  }
+}

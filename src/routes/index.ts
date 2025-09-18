@@ -1,6 +1,7 @@
 import express from "express";
 import db from "../database/connection";
 import userRouter from "./user";
+import walletRouter from "./wallet";
 
 const Router = express.Router();
 
@@ -21,6 +22,7 @@ Router.get("/health", async (req, res) => {
 });
 
 Router.use("/users", userRouter);
+Router.use("/wallets", walletRouter);
 
 Router.use(function (req, res, next) {
   res

@@ -254,7 +254,7 @@ export class UserService {
       const response = await axios.get(
         `https://adjutor.lendsqr.com/v2/verification/karma/${encodeURIComponent(email)}`,
         {
-          timeout: 10000,
+          timeout: 30000,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${process.env.KARMA_TOKEN}`,

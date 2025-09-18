@@ -106,7 +106,7 @@ describe("UserService", () => {
         expect(mockedAxios.get).toHaveBeenCalledWith(
           "https://adjutor.lendsqr.com/v2/verification/karma/john.doe%40example.com",
           expect.objectContaining({
-            timeout: 10000,
+            timeout: 30000,
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer test-karma-token",
@@ -546,7 +546,7 @@ describe("UserService", () => {
         expect(mockedAxios.get).toHaveBeenCalledWith(
           "https://adjutor.lendsqr.com/v2/verification/karma/test%40example.com",
           expect.objectContaining({
-            timeout: 10000,
+            timeout: 30000,
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer test-karma-token",
@@ -566,7 +566,7 @@ describe("UserService", () => {
       });
 
       it("should handle network timeout", async () => {
-        const timeoutError = new Error("timeout of 10000ms exceeded");
+        const timeoutError = new Error("timeout of 30000ms exceeded");
         timeoutError.name = "TimeoutError";
         mockedAxios.get.mockRejectedValue(timeoutError);
 
