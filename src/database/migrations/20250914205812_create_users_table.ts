@@ -22,7 +22,8 @@ export async function up(knex: Knex): Promise<void> {
     table.string("nokPhone").nullable();
     table.string("nokEmail").nullable();
     table.string("nokRelationship").nullable();
-    table.timestamps(true, true);
+    table.timestamp("createdAt").defaultTo(knex.fn.now());
+    table.timestamp("updatedAt").defaultTo(knex.fn.now());
   });
 }
 

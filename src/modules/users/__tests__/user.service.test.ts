@@ -92,8 +92,8 @@ describe("UserService", () => {
           id: testUserId,
           ...validCreateUserDTO,
           password: "hashed-password",
-          created_at: new Date(),
-          updated_at: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
         });
 
         // Mock app functions
@@ -146,8 +146,8 @@ describe("UserService", () => {
           id: testUserId,
           ...validCreateUserDTO,
           password: "hashed-password",
-          created_at: new Date(),
-          updated_at: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
         });
 
         // Mock app functions
@@ -169,8 +169,8 @@ describe("UserService", () => {
           id: testUserId,
           ...validCreateUserDTO,
           password: "hashed-password",
-          created_at: new Date(),
-          updated_at: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
         });
 
         // Mock app functions

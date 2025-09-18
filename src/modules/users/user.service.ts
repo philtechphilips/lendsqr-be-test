@@ -36,8 +36,8 @@ interface UserRow {
   nokPhone?: string | null;
   nokEmail?: string | null;
   nokRelationship?: string | null;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export class UserService {

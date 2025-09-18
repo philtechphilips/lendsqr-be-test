@@ -24,8 +24,8 @@ export interface TransactionRow {
   reference: string;
   receiverId?: string; // For transfer transactions (creditor)
   senderId?: string; // For transfer transactions (debitor)
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
   wallet?: any; // Populated wallet data
   user?: any; // Populated user data
   receiver?: any; // Populated receiver data

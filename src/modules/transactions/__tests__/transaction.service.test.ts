@@ -55,8 +55,8 @@ describe("TransactionService", () => {
       reference: testReference,
       receiverId: null,
       senderId: null,
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     const mockPopulatedTransaction: TransactionRow = {

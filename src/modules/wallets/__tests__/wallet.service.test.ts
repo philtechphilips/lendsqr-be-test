@@ -59,8 +59,8 @@ describe("WalletService", () => {
           id: testWalletId,
           user_id: testUserId,
           balance: 5000,
-          created_at: new Date(),
-          updated_at: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
         };
 
         mockedSchema.fetchOne.mockResolvedValue(mockWallet);
@@ -119,8 +119,8 @@ describe("WalletService", () => {
       id: testWalletId,
       user_id: testUserId,
       balance: 5000,
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     const mockUpdatedWallet = {
@@ -135,8 +135,8 @@ describe("WalletService", () => {
       type: "FUND" as const,
       amount: 1000,
       reference: testReference,
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     describe("Positive Test Cases", () => {
@@ -272,8 +272,8 @@ describe("WalletService", () => {
       id: testWalletId,
       user_id: testUserId,
       balance: 5000,
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     const mockRecipient = {
@@ -287,8 +287,8 @@ describe("WalletService", () => {
       id: "recipient-wallet-id",
       user_id: testRecipientId,
       balance: 2000,
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     const mockUpdatedSenderWallet = {
@@ -309,8 +309,8 @@ describe("WalletService", () => {
       amount: 500,
       reference: testReference,
       receiverId: testRecipientId,
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     describe("Positive Test Cases", () => {
@@ -536,8 +536,8 @@ describe("WalletService", () => {
       id: testWalletId,
       user_id: testUserId,
       balance: 5000,
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     const mockUpdatedWallet = {
@@ -552,8 +552,8 @@ describe("WalletService", () => {
       type: "WITHDRAW" as const,
       amount: 500,
       reference: testReference,
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     describe("Positive Test Cases", () => {
@@ -686,8 +686,8 @@ describe("WalletService", () => {
       id: testWalletId,
       user_id: testUserId,
       balance: 5000,
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     describe("Positive Test Cases", () => {

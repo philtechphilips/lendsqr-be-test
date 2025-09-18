@@ -27,8 +27,8 @@ export interface WalletRow {
   id: string;
   user_id: string;
   balance: number;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export class WalletService {

@@ -18,7 +18,8 @@ export async function up(knex: Knex): Promise<void> {
     table.enum("type", ["FUND", "TRANSFER", "WITHDRAW"]).notNullable();
     table.decimal("amount", 15, 2).notNullable();
     table.string("reference").unique().notNullable();
-    table.timestamps(true, true);
+    table.timestamp("createdAt").defaultTo(knex.fn.now());
+    table.timestamp("updatedAt").defaultTo(knex.fn.now());
   });
 }
 

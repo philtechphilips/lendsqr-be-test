@@ -39,8 +39,8 @@ export interface TransactionResponse {
   reference: string;
   receiverId?: string; // For transfer transactions (creditor)
   senderId?: string; // For transfer transactions (debitor)
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
   wallet?: WalletResponse; // Populated wallet data
   user?: UserResponse; // Populated user data
   receiver?: UserResponse; // Populated receiver data
